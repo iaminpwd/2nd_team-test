@@ -1,0 +1,33 @@
+---
+# 1. Helm이 있는지 먼저 확인하고 없으면 설치합니다.
+- name: Helm 설치 여부 확인
+  stat:
+    path: /usr/local/bin/helm
+  register: helm_bin
+
+- name: Helm 설치 스크립트 실행
+  shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  when: not helm_bin.stat.exists
+
+# 2. 여기서부터 기존 코드
+- name: Prometheus Community 헬름 리포지토리 추가
+  kubernetes.core.helm_repository:
+    name: prometheus-community
+    repo_url: "https://prometheus-community.github.io/helm-charts"
+
+- name: Kube-Prometheus-Stack 차트 배포
+  kubernetes.core.helm:
+    name: prometheus
+    chart_ref: prometheus-community/kube-prometheus-stack
+    release_namespace: "{{ prometheus_namespace }}"
+    create_namespace: true
+    # [핵심] K3s의 설정 파일 경로를 직접 지정합니다.
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    values:
+      prometheus:
+        prometheusSpec:
+          nodeSelector:
+            kubernetes.io/hostname: "{{ target_worker_node }}"
+      grafana:
+        nodeSelector:
+          kubernetes.io/hostname: "{{ target_worker_node }}"

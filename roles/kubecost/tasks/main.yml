@@ -1,0 +1,34 @@
+---
+# 1. Helm 설치 여부 확인 (역할의 독립성 확보)
+- name: Helm 설치 여부 확인
+  stat:
+    path: /usr/local/bin/helm
+  register: helm_bin
+
+- name: Helm 설치 스크립트 실행
+  shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  when: not helm_bin.stat.exists
+
+# 2. 리포지토리 관리 (V3 공식 저장소)
+- name: Helm 리포지토리 업데이트
+  shell: |
+    helm repo remove kubecost || true
+    helm repo add kubecost https://kubecost.github.io/kubecost/
+    helm repo update
+
+# 3. 설정 파일 생성 (Custom Pricing 포함)
+- name: Kubecost 설정 파일 생성
+  template:
+    src: values.yaml.j2
+    dest: /tmp/kubecost_values.yaml
+
+# 4. 차트 배포
+- name: Kubecost 3.x 차트 배포
+  kubernetes.core.helm:
+    name: kubecost
+    chart_ref: kubecost/kubecost
+    release_namespace: "{{ kubecost_namespace }}"
+    create_namespace: true
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    values_files:
+      - /tmp/kubecost_values.yaml

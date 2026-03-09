@@ -1,0 +1,14 @@
+# roles/kubecost/templates/values.yaml.j2
+global:
+  # 3.0에서 모든 클러스터 식별은 여기서만 합니다.
+  clusterId: "aws-k8s-ansible-4weeks"
+
+# 로컬 테스트를 위한 가짜 가격표 (이건 3.0에서도 유효합니다)
+customPricing:
+  enabled: true
+  cpu: "0.0316"
+  ram: "0.0042"
+  storage: "0.0001"
+
+nodeSelector:
+  "kubernetes.io/hostname": "{{ target_worker_node }}"

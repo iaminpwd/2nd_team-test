@@ -1,0 +1,4 @@
+# group_vars/all.yml
+prometheus_namespace: "monitoring"
+kubecost_namespace: "kubecost"
+target_worker_node: "k3s-worker-1" # RAM이 넉넉한 노드 지정
