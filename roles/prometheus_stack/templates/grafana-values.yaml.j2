@@ -3,6 +3,13 @@ grafana:
   adminPassword: "{{ grafana_admin_password }}"
   nodeSelector:
     kubernetes.io/hostname: "{{ target_worker_node }}"
+  
   grafana.ini:
     dashboards:
       min_refresh_interval: 1s
+
+  dashboards:
+    default:
+      kubecost-official:
+        url: "https://raw.githubusercontent.com/kubecost/cost-analyzer-helm-chart/develop/cost-analyzer/dashboards/cost-overview.json"
+        datasource: Prometheus

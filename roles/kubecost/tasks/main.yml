@@ -33,5 +33,4 @@
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     values_files:
       - /tmp/kubecost_values.yaml
-    # [핵심] 파드가 뜰 때까지 앤서블이 기다리지 않고 바로 완료 처리하도록 변경
     wait: false
