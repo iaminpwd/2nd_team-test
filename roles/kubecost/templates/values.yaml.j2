@@ -1,9 +1,66 @@
-# roles/kubecost/templates/values.yaml.j2
 global:
-  # 3.0에서 모든 클러스터 식별은 여기서만 합니다.
-  clusterId: "aws-k8s-ansible-4weeks"
+  clusterId: "finops-k3s"
+  prometheus:
+    enabled: true
+    internal: true
+  grafana:
+    enabled: false
+    # [핵심 수정] 프론트엔드가 엉뚱한 주소를 찾지 않도록 도메인을 현재 네임스페이스로 고정
+    proxy: false 
 
-# 로컬 테스트를 위한 가짜 가격표 (이건 3.0에서도 유효합니다)
+# 프론트엔드 설정 보완
+kubecostFrontend:
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "10m"
+    limits:
+      memory: "128Mi"
+  # Nginx가 업스트림 에러로 죽지 않게 시간을 벌어주는 프로브 유지
+  livenessProbe:
+    initialDelaySeconds: 60
+    periodSeconds: 20
+
+# 그라파나를 껐으므로 프론트엔드에서 그라파나 관련 기능을 명시적으로 비활성화
+kubecostProductConfigs:
+  grafanaURL: ""
+
+# 나머지 설정은 동일하게 유지
+forecasting:
+  enabled: false
+
+kubecostModel:
+  retentionDaily: 3
+  retentionHourly: 3
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "50m"
+    limits:
+      memory: "512Mi"
+
+kubecostAggregator:
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
+    limits:
+      memory: "256Mi"
+
+prometheus:
+  server:
+    retention: 3d
+    nodeSelector:
+      "kubernetes.io/hostname": "{{ target_worker_node }}"
+    resources:
+      requests:
+        memory: "200Mi"
+      limits:
+        memory: "400Mi"
+  nodeExporter: { enabled: false }
+  kubeStateMetrics: { enabled: false }
+  pushgateway: { enabled: false }
+
 customPricing:
   enabled: true
   cpu: "0.0316"

@@ -1,0 +1,22 @@
+prometheus:
+  prometheusSpec:
+    nodeSelector:
+      kubernetes.io/hostname: "{{ target_worker_node }}"
+    externalLabels:
+      cluster_id: "finops-k3s"
+
+prometheusOperator:
+  nodeSelector:
+    kubernetes.io/hostname: "{{ target_worker_node }}"
+
+prometheus-node-exporter:
+  prometheus:
+    monitor:
+      enabled: true
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          targetLabel: node
+          action: replace
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          targetLabel: instance
+          action: replace
