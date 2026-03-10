@@ -1,3 +1,4 @@
+# ./roles/prometheus_stack/templates/grafana-values.yaml.j2
 grafana:
   adminPassword: "{{ grafana_admin_password }}"
   nodeSelector:
@@ -5,11 +6,3 @@ grafana:
   grafana.ini:
     dashboards:
       min_refresh_interval: 1s
-      
-  # [추가됨] Kubecost 전용 프로메테우스를 그라파나에 자동으로 연결합니다!
-  additionalDataSources:
-    - name: Kubecost-Internal
-      type: prometheus
-      url: http://kubecost-prometheus-server.{{ kubecost_namespace }}.svc:80
-      access: proxy
-      isDefault: false
