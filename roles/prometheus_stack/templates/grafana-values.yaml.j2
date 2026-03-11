@@ -3,6 +3,20 @@ grafana:
   adminPassword: "{{ grafana_admin_password }}"
   nodeSelector:
     kubernetes.io/hostname: "{{ target_worker_node }}"
+  # "{{ target_label_key }}": "{{ target_label_value }}"
+  persistence:
+    enabled: true
+    type: pvc
+    size: 500Mi
+    # storageClassName: "gp3"  # AWS 환경이라면 gp3 입력을 추천합니다.
+
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "512Mi"
   
   grafana.ini:
     dashboards:
