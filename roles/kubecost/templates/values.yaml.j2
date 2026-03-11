@@ -2,14 +2,14 @@
 global:
   clusterId: "finops-k3s"
   prometheus:
-    # [핵심 통합 설정] 내장 프로메테우스 끄기 및 메인 주소 매핑
+    # 내장 프로메테우스 끄기 및 메인 주소 매핑
     enabled: false 
-    fqdn: "http://prometheus-operated.{{ prometheus_namespace }}.svc:9090"
+    fqdn: "http://prometheus-kube-prometheus-prometheus.{{ prometheus_namespace }}.svc:9090"
   grafana:
     enabled: false
     proxy: false 
 
-# [핵심 통합 설정] 메인 프로메테우스가 Kubecost 데이터를 수집하고 규칙을 가져가도록 허용
+# 메인 프로메테우스가 Kubecost 데이터를 수집하고 규칙을 가져가도록 허용
 serviceMonitor:
   enabled: true
 prometheusRule:

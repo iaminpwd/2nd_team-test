@@ -6,7 +6,7 @@ prometheus:
     externalLabels:
       cluster_id: "finops-k3s"
     
-    # [핵심 통합 설정] 다른 네임스페이스의 모니터링 규칙과 타겟을 모두 인식하도록 제한 해제
+    # 다른 네임스페이스의 모니터링 규칙과 타겟을 모두 인식하도록 제한 해제
     serviceMonitorSelectorNilUsesHelmValues: false
     ruleSelectorNilUsesHelmValues: false
 

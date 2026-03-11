@@ -13,10 +13,10 @@
     helm repo add kubecost https://kubecost.github.io/cost-analyzer/
     helm repo update
 
-- name: 이전 버전 찌꺼기 제거 (에러 방지)
-  shell: |
-    helm uninstall kubecost -n {{ kubecost_namespace }} || true
-    kubectl delete pvc --all -n {{ kubecost_namespace }} || true
+#- name: 이전 버전 찌꺼기 제거 (에러 방지)
+#  shell: |
+#    helm uninstall kubecost -n {{ kubecost_namespace }} || true
+#    kubectl delete pvc --all -n {{ kubecost_namespace }} || true
 
 - name: Kubecost 설정 파일 생성
   template:
